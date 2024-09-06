@@ -52,15 +52,23 @@ export default function TransitionsModal({ children, media_type, id }) {
     );
 
     setContent(data);
-    // console.log(data);
+
+    console.log(data);
   };
 
   const fetchVideo = async () => {
+    // console.log(id);
     const { data } = await axios.get(
       `https://api.themoviedb.org/3/${media_type}/${id}/videos?api_key=${process.env.REACT_APP_API_KEY}&language=en-US`
     );
+    const trailer = data.results.find((video) => 
+      video.name.toLowerCase().includes('official trailer')
+    );
 
-    setVideo(data.results[0]?.key);
+    // Set video to trailer key if found, otherwise default to the first video
+    setVideo(trailer ? trailer.key : data.results[0]?.key);
+    console.log(data);
+    // setVideo(data.results[0]?.key);
   };
 
   useEffect(() => {
@@ -140,6 +148,9 @@ export default function TransitionsModal({ children, media_type, id }) {
                     startIcon={<YouTubeIcon />}
                     color="secondary"
                     target="__blank"
+                    onClick={() => {
+                      console.log(`https://www.youtube.com/watch?v=${video}`);
+                    }}
                     href={`https://www.youtube.com/watch?v=${video}`}
                   >
                     Watch the Trailer
